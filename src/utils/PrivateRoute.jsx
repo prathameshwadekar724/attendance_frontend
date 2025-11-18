@@ -6,13 +6,15 @@ export default function PrivateRoute({ children }) {
   const { user, loading } = useContext(AuthContext);
   const token = localStorage.getItem("token");
 
-  // 1. If context is still loading, show nothing (or a spinner)
-  // Do NOT redirect yet.
+  // CHANGE THIS PART
   if (loading) {
-    return null; 
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <h1>Loading...</h1>
+      </div>
+    );
   }
 
-  // 2. Now that loading is false, check authentication
   if (!token || !user) {
     return <Navigate to="/login" replace />;
   }

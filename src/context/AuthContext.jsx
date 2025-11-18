@@ -4,15 +4,25 @@ export const AuthContext = createContext();
 
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  // 1. Add a loading state, start it as TRUE
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    const storedToken = localStorage.getItem("token");
+
+    if (storedUser && storedToken) {
+      try {
+        // Try to parse the user. If this fails, it jumps to 'catch'
+        setUser(JSON.parse(storedUser)); 
+      } catch (error) {
+        // If JSON is corrupt, clear it so we don't get stuck
+        console.error("Corrupt user data found, logging out.");
+        localStorage.clear();
+        setUser(null);
+      }
     }
-    // 2. Set loading to false ONLY after we have checked storage
+    
+    // This ensures loading ALWAYS turns false, so the screen doesn't stay white
     setLoading(false);
   }, []);
 
@@ -29,7 +39,6 @@ export default function AuthProvider({ children }) {
   };
 
   return (
-    // 3. Pass loading to the rest of the app
     <AuthContext.Provider value={{ user, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
