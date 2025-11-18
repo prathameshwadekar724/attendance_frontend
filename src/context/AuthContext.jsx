@@ -2,28 +2,31 @@ import { createContext, useState, useEffect } from "react";
 
 export const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
-  // 1. INITIALIZE: Check Local Storage when the app starts
+export default function AuthProvider({ children }) {
+  // FIX: Initialize state directly from localStorage
   const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem("user");
-    return savedUser ? JSON.parse(savedUser) : null;
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
   });
 
-  // 2. LOGIN: Save data to Local Storage when user logs in
-  const login = (userData) => {
-    localStorage.setItem("user", JSON.stringify(userData));
-    setUser(userData);
+  const login = (payload) => {
+    const { token, data } = payload; 
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(data));
+    setUser(data);
   };
 
-  // 3. LOGOUT: Clear Local Storage when user logs out
   const logout = () => {
-    localStorage.removeItem("user");
+    localStorage.clear();
     setUser(null);
   };
+
+  // You no longer need the useEffect to load the user, 
+  // because the useState does it automatically on start.
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
-};
+}
