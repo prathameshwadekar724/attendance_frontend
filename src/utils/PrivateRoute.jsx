@@ -6,9 +6,9 @@ export default function PrivateRoute({ children }) {
   const { user } = useContext(AuthContext);
   const token = localStorage.getItem("token");
 
-  // if (!token || !user) {
-  //   return <Navigate to="/login" replace />;
-  // }
+  if (!token || !user) {
+    return <Navigate to="/login" replace />;
+  }
 
   return children;
 }
