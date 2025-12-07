@@ -18,7 +18,7 @@ export default function AuthProvider({ children }) {
 
   const logout = async () => {
     try {
-      await api.get("/logout");   // ⭐ CALL BACKEND LOGOUT
+      await api.get("/auth/logout");   // ⭐ CALL BACKEND LOGOUT
     } catch (e) {
       console.log("Logout error:", e.message);
     }
