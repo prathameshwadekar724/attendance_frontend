@@ -18,12 +18,14 @@ export default function AuthProvider({ children }) {
 
   const logout = async () => {
     try {
-      await axios.get("/logout");
-      toast.success("Logout successful");
-      router.push("/login");
-    } catch (error) {
-      toast.error(error.message);
+      await api.get("/logout");   // ⭐ CALL BACKEND LOGOUT
+    } catch (e) {
+      console.log("Logout error:", e.message);
     }
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null);
   };
 
   // You no longer need the useEffect to load the user, 
